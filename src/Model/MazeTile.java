@@ -1,8 +1,12 @@
 package Model;
 
-public abstract class MazeTile {
+import javax.swing.*;
 
-    public enum tileType {BUSHTILE, MOUSETILE, PATHTILE}
+public abstract class MazeTile extends JPanel {
+
+    public enum tileType {BUSHTILE, TUNNELTILE, PATHTILE, BORDERTILE}
+
+    public enum tileAccess {ALLMOVE, MOUSEMOVE, NOMOVE}
 
     abstract void setTileType();
 
