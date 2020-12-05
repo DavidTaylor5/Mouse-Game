@@ -3,8 +3,13 @@ package Model;
 import java.awt.*;
 
 public class BorderTile extends MazeTile {
-    MazeTile.tileType tile = MazeTile.tileType.BUSHTILE;
-    MazeTile.tileAccess access = MazeTile.tileAccess.NOMOVE;
+
+    public BorderTile(int xPos, int yPos){
+        super.setAccess(tileAccess.ALLMOVE);
+        super.setTile(tileType.PATHTILE);
+        super.setxTilePos(xPos);
+        super.setyTilePos(yPos);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -19,4 +24,5 @@ public class BorderTile extends MazeTile {
     void setTileType() {
 
     }
+
 }

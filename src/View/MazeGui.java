@@ -1,23 +1,28 @@
 package View;
 
-import Model.PathTile;
+import Controller.Maze;
+import Model.MazeObject;
+import Model.MazeTile;
+import Model.Mouse;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class MazeGui extends JFrame {
 
-    //JPanel maze;  //create the map with grid in another class then instantiate here
+    Maze myMaze;
     JPanel northPanel = new JPanel();
     JPanel southPanel = new JPanel();
 
-    JButton down = new JButton();
-    JButton up = new JButton();
-    JButton left = new JButton();
-    JButton right = new JButton();
+    JButton down = new JButton("DOWN ");
+    JButton up = new JButton(" UP  ");
+    JButton left = new JButton("RIGHT");
+    JButton right = new JButton("LEFT ");
     ButtonGroup btg = new ButtonGroup();
 
     JButton start = new JButton("Start");
@@ -29,7 +34,6 @@ public class MazeGui extends JFrame {
     JLabel amountLives = new JLabel();
     JLabel amountCheese = new JLabel();
 
-    ImageIcon mouse = new ImageIcon("mickey-mouse.png"); ///????
 
 
     public MazeGui(String[] argumentTxt){
@@ -59,34 +63,97 @@ public class MazeGui extends JFrame {
         this.setLayout(new BorderLayout());
         this.setVisible(true);
         this.setSize(new Dimension(650, 400));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        myMaze = new Maze(letterMap);
+        this.add(myMaze, BorderLayout.CENTER);
+        //////////////////////////
+        //this proves I can paint pikachu on JPanel
+        MazeTile tile = myMaze.tileArray[2][2]; //so I can interact with my map using my gui this is good
+        tile.setHoldObject(true);
+        tile.setCurrentObj(new Mouse(2, 2));
+        tile.repaint();
+
+        //looks like I am able to look around the map at possible mouse moves.
+//        System.out.println("Is left possible? " + myMaze.possibleMove(2, 2, "left"));
+//        System.out.println("Is right possible? " + myMaze.possibleMove(2, 2, "right"));
+//        System.out.println("Is up possible? " + myMaze.possibleMove(2, 2, "up"));
+//        System.out.println("Is down possible? " + myMaze.possibleMove(2, 2, "down"));
+        //if(tile)
 
 
-        this.add(new Maze(letterMap), BorderLayout.CENTER);
 
-//        JPanel maze23 = new JPanel();
-//        maze23.setBackground(Color.BLUE);
-//        this.add(maze23, BorderLayout.CENTER);
+        //score panel
+        this.add(northPanel, BorderLayout.NORTH);
+        northPanel.setLayout(new FlowLayout());
+        northPanel.add(start);
+        northPanel.add(stop);
+        northPanel.add(reset);
+        northPanel.add(mouseIcon);
+        northPanel.add(cheeseIcon);
+        northPanel.add(amountLives);
+        northPanel.add(amountCheese);
 
-//        //score panel
-//        this.add(northPanel, BorderLayout.NORTH);
-//        northPanel.setLayout(new FlowLayout());
-//        northPanel.add(start);
-//        northPanel.add(stop);
-//        northPanel.add(reset);
-//        northPanel.add(mouseIcon);
-//        northPanel.add(cheeseIcon);
-//        northPanel.add(amountLives);
-//        northPanel.add(amountCheese);
-//
-//        //action panel
-//        this.add(southPanel, BorderLayout.SOUTH);
-//        southPanel.setLayout(new FlowLayout());
-//        southPanel.add(up);
-//        southPanel.add(down);
-//        southPanel.add(left);
-//        southPanel.add(right);
+        //action panel
+        this.add(southPanel, BorderLayout.SOUTH);
+        southPanel.setLayout(new FlowLayout());
+        southPanel.add(up);
+        southPanel.add(down);
+        southPanel.add(left);
+        southPanel.add(right);
+
+        //add ActionListeners to the mouse keys
+        MoveHandler moveHandler = new MoveHandler();
+        up.addActionListener(moveHandler);
+        down.addActionListener(moveHandler);
+        left.addActionListener(moveHandler);
+        right.addActionListener(moveHandler);
 
 
 
     }
+
+    public int getPlayerX(){
+        return MazeGui.this.myMaze.player1.getxC();
+    }
+
+    public int getPlayerY(){
+        return MazeGui.this.myMaze.player1.getyC();
+    }
+
+
+
+
+    private class MoveHandler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            //first I get the x and y position of maze array of mouse
+            int xPos = getPlayerX();
+            int yPos = getPlayerY();
+            MazeTile currentTile = MazeGui.this.myMaze.tileArray[xPos][yPos];
+            System.out.println(currentTile);
+            System.out.println("can the tile move down? " + MazeGui.this.myMaze.possibleMove(currentTile, "down", 1));
+            //there is an issue determining if the tile can move down.  //I need to give my mazeTile coordinates on instantiation
+
+
+            if(event.getSource() == MazeGui.this.down){
+
+                if(MazeGui.this.myMaze.possibleMove(currentTile, "down", 1)){
+                    MazeGui.this.myMaze.moveObject(myMaze.player1, "down", 1);
+                    System.out.println("Move Down!"); //don't forget to add actionListeners
+                    //update where the mouse is, the x and y of the mouse, repaint the old tile, repaint the new tile
+                }
+
+            } else if(event.getSource() == MazeGui.this.up){
+
+            } else if(event.getSource() == MazeGui.this.left){
+
+            } else if(event.getSource() == MazeGui.this.right){
+
+            }
+        }
+    }
+
+
 }

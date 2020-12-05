@@ -4,8 +4,12 @@ import java.awt.*;
 
 public class BushTile extends MazeTile {
 
-    tileType tile = tileType.BUSHTILE;
-    tileAccess access = tileAccess.NOMOVE;
+    public BushTile(int xPos, int yPos){
+        super.setTile(tileType.BUSHTILE);
+        super.setAccess(tileAccess.NOMOVE);
+        super.setxTilePos(xPos);
+        super.setyTilePos(yPos);
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
