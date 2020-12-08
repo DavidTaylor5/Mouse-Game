@@ -13,6 +13,7 @@ public class Cat extends MazeObject{
     public int amountMoves;
     public int numbCat;
     public String direction;
+    public String oppositeD;
     //public string current Direction // need to implement
 
     public Cat(int x, int y, int typeCat){
@@ -26,6 +27,8 @@ public class Cat extends MazeObject{
     public void determineIcon(){
         if (this.numbCat == 1){
             super.setObjectImage(catIcon1);
+            this.setDirection("left");
+            this.setOppositeD("Right");
         } else if (this.numbCat == 2){
             super.setObjectImage(catIcon2);
             //this.setDirection("Down");
@@ -39,6 +42,8 @@ public class Cat extends MazeObject{
             this.setDirection("Left");
         } else if (this.numbCat == 5){
             super.setObjectImage(catIcon5);
+            this.setDirection("Up");
+            this.setOppositeD("down");
         } else {
             System.out.println("Issue choosing cat icon.");
         }
@@ -59,5 +64,13 @@ public class Cat extends MazeObject{
 
     public void setTypeCat(int typeCat) {
         this.numbCat = typeCat;
+    }
+
+    public String getOppositeD() {
+        return oppositeD;
+    }
+
+    public void setOppositeD(String oppositeD) {
+        this.oppositeD = oppositeD;
     }
 }

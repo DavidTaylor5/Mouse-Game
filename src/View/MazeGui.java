@@ -163,7 +163,7 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
         tile1.checkObjects();
         tile1.repaint();
         //mouse start ^
-        MazeTile tile2 = myMaze.tileArray[myMaze.cat1.xC][myMaze.cat2.yC];
+        MazeTile tile2 = myMaze.tileArray[myMaze.cat1.xC][myMaze.cat1.yC];
         tile2.setCat1(myMaze.cat1);
         tile2.checkObjects();
         tile2.repaint();
@@ -214,10 +214,11 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
                 //System.out.println(secondsPassed); prints to the console each second passed
                 MazeGui.this.timePassed.setText("Time Passed : " + secondsPassed);
                 //make the cats move
-                MazeGui.this.myMaze.moveCat(myMaze.cat2);
-                //MazeGui.this.myMaze.moveCat(myMaze.cat3);
-                //MazeGui.this.myMaze.moveCat(myMaze.cat4);
-                //MazeGui.this.myMaze
+                MazeGui.this.myMaze.moveCat(myMaze.cat1, myMaze.player1);
+                MazeGui.this.myMaze.moveCat(myMaze.cat2, myMaze.player1);
+                MazeGui.this.myMaze.moveCat(myMaze.cat3, myMaze.player1);
+                MazeGui.this.myMaze.moveCat(myMaze.cat4, myMaze.player1);
+                MazeGui.this.myMaze.moveCat(myMaze.cat5, myMaze.player1);
                 //MazeGui.this.secondsPassed = secondsPassed;
             }
         };
