@@ -14,6 +14,8 @@ public abstract class MazeTile extends JPanel {
     public MazeObject currentObj;
     boolean holdObject = false;
 
+    //potentially a path could hold up to 4 objects I guess.
+
     public int xTilePos;
     public int yTilePos;
 

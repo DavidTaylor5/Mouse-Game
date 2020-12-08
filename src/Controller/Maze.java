@@ -60,6 +60,8 @@ public class Maze extends JPanel {
         oldTile.setCurrentObj(null);
         oldTile.setHoldObject(false);
         MazeTile newTile = this.futureTile(oldTile, direction, numbMoves);
+        // //checkInteraction() // mouse should only worry about interacting with cheese //Cat should worry about getting x y and interacting with mouse
+        //I should auto generate cheese.
         newTile.setCurrentObj(object);
         newTile.setHoldObject(true);
         newTile.setCurrentObj(object); //now I just need to update the player so that it also knows to modify coordinates.
@@ -67,6 +69,9 @@ public class Maze extends JPanel {
         oldTile.repaint();
         newTile.repaint();
         //MazeTile newPos = tileArray
+        object.setxC(newTile.xTilePos);
+        object.setyC(newTile.yTilePos);
+
     }
 
     public MazeTile futureTile(MazeTile currentTile, String direction, int numbMoves){

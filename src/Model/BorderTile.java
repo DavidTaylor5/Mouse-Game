@@ -5,7 +5,7 @@ import java.awt.*;
 public class BorderTile extends MazeTile {
 
     public BorderTile(int xPos, int yPos){
-        super.setAccess(tileAccess.ALLMOVE);
+        super.setAccess(tileAccess.NOMOVE);
         super.setTile(tileType.PATHTILE);
         super.setxTilePos(xPos);
         super.setyTilePos(yPos);

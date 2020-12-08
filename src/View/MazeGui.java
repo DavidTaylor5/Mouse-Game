@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Maze;
+import Model.Cat;
 import Model.MazeObject;
 import Model.MazeTile;
 import Model.Mouse;
@@ -12,8 +13,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MazeGui extends JFrame {
+
 
     Maze myMaze;
     JPanel northPanel = new JPanel();
@@ -21,22 +25,55 @@ public class MazeGui extends JFrame {
 
     JButton down = new JButton("DOWN ");
     JButton up = new JButton(" UP  ");
-    JButton left = new JButton("RIGHT");
-    JButton right = new JButton("LEFT ");
+    JButton left = new JButton("Left ");
+    JButton right = new JButton("RIGHT ");
     ButtonGroup btg = new ButtonGroup();
 
     JButton start = new JButton("Start");
     JButton stop = new JButton("Stop");
     JButton reset = new JButton("Reset");
 
+    JLabel timePassed = new JLabel("0");
     JLabel mouseIcon = new JLabel();
     JLabel cheeseIcon = new JLabel();
     JLabel amountLives = new JLabel();
     JLabel amountCheese = new JLabel();
 
+    //public int secondsPassed;
+
+    public class TimerClass {
+
+
+        public int secondsPassed = 0;
+
+
+        Timer myTimer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                secondsPassed++;
+                System.out.println(secondsPassed);
+                MazeGui.this.timePassed.setText("Time Passed : " + secondsPassed);
+                //make the cats move
+                //MazeGui.this.secondsPassed = secondsPassed;
+            }
+        };
+
+        public void startGame(){
+            myTimer.scheduleAtFixedRate(task, 1000, 1000);
+        }
+
+    }
+
 
 
     public MazeGui(String[] argumentTxt){
+
+//        while(secondsPassed <= 10){
+//            myTimer.scheduleAtFixedRate(task, 1000, 1000);
+//        }
+
+
+
 
         String[] letterMap = new String[10];
 
@@ -71,7 +108,14 @@ public class MazeGui extends JFrame {
         //this proves I can paint pikachu on JPanel
         MazeTile tile = myMaze.tileArray[2][2]; //so I can interact with my map using my gui this is good
         tile.setHoldObject(true);
-        tile.setCurrentObj(new Mouse(2, 2));
+        tile.setCurrentObj(myMaze.player1);
+
+        //
+        MazeTile tileC = myMaze.tileArray[4][4];
+        tileC.setHoldObject(true);
+        tileC.setCurrentObj(new Cat(4, 4, 1));
+        //
+
         tile.repaint();
 
         //looks like I am able to look around the map at possible mouse moves.
@@ -86,6 +130,7 @@ public class MazeGui extends JFrame {
         //score panel
         this.add(northPanel, BorderLayout.NORTH);
         northPanel.setLayout(new FlowLayout());
+        northPanel.add(timePassed);
         northPanel.add(start);
         northPanel.add(stop);
         northPanel.add(reset);
@@ -109,9 +154,11 @@ public class MazeGui extends JFrame {
         left.addActionListener(moveHandler);
         right.addActionListener(moveHandler);
 
-
+        TimerClass gameTime = new TimerClass();
+        gameTime.startGame();
 
     }
+
 
     public int getPlayerX(){
         return MazeGui.this.myMaze.player1.getxC();
@@ -147,9 +194,27 @@ public class MazeGui extends JFrame {
 
             } else if(event.getSource() == MazeGui.this.up){
 
+                if(MazeGui.this.myMaze.possibleMove(currentTile, "up", 1)){
+                    MazeGui.this.myMaze.moveObject(myMaze.player1, "up", 1);
+                    System.out.println("Move up!"); //don't forget to add actionListeners
+                    //update where the mouse is, the x and y of the mouse, repaint the old tile, repaint the new tile
+                }
+
             } else if(event.getSource() == MazeGui.this.left){
 
+                if(MazeGui.this.myMaze.possibleMove(currentTile, "left", 1)){
+                    MazeGui.this.myMaze.moveObject(myMaze.player1, "left", 1);
+                    System.out.println("Move Left!"); //don't forget to add actionListeners
+                    //update where the mouse is, the x and y of the mouse, repaint the old tile, repaint the new tile
+                }
+
             } else if(event.getSource() == MazeGui.this.right){
+
+                if(MazeGui.this.myMaze.possibleMove(currentTile, "right", 1)){
+                    MazeGui.this.myMaze.moveObject(myMaze.player1, "right", 1);
+                    System.out.println("Move Right!"); //don't forget to add actionListeners
+                    //update where the mouse is, the x and y of the mouse, repaint the old tile, repaint the new tile
+                }
 
             }
         }
