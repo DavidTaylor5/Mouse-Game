@@ -11,40 +11,53 @@ public class Cat extends MazeObject{
     public ImageIcon catIcon5 = new ImageIcon("src/Model/cat5-25.png");
 
     public int amountMoves;
-    public int typeCat;
+    public int numbCat;
+    public String direction;
+    //public string current Direction // need to implement
 
     public Cat(int x, int y, int typeCat){
         super.setxC(x);
         super.setyC(y);
         this.setTypeCat(typeCat);
+        super.setType(objectType.CATTYPE);
         determineIcon();
     }
 
     public void determineIcon(){
-        if (this.typeCat == 1){
+        if (this.numbCat == 1){
             super.setObjectImage(catIcon1);
-        } else if (this.typeCat == 2){
+        } else if (this.numbCat == 2){
             super.setObjectImage(catIcon2);
-        } else if (this.typeCat == 3){
+            //this.setDirection("Down");
+            //tester
+            this.setDirection("Left");
+        } else if (this.numbCat == 3){
             super.setObjectImage(catIcon3);
-        } else if (this.typeCat == 4){
+            this.setDirection("Up");
+        } else if (this.numbCat == 4){
             super.setObjectImage(catIcon4);
-        } else if (this.typeCat == 5){
+            this.setDirection("Left");
+        } else if (this.numbCat == 5){
             super.setObjectImage(catIcon5);
         } else {
             System.out.println("Issue choosing cat icon.");
         }
     }
 
-    public void moveStript(){
-
+    public String getDirection() {
+        return direction;
     }
 
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+
     public int getTypeCat() {
-        return typeCat;
+        return numbCat;
     }
 
     public void setTypeCat(int typeCat) {
-        this.typeCat = typeCat;
+        this.numbCat = typeCat;
     }
 }

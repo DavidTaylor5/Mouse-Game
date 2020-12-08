@@ -6,9 +6,11 @@ public abstract class MazeObject {
 
     public enum objectType {MOUSETYPE, CATTYPE, CHEESETYPE }
 
+
     public ImageIcon objectImage;
     public int xC;
     public int yC;
+    public objectType type;
 
     public ImageIcon getObjectImage() {
         return objectImage;
@@ -34,7 +36,16 @@ public abstract class MazeObject {
         this.yC = yC;
     }
 
+    public objectType getType() {
+        return type;
+    }
+
+    public void setType(objectType type) {
+        this.type = type;
+    }
+
     //public abstract void move();
+
 
 
 }

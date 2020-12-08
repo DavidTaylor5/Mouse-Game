@@ -11,8 +11,12 @@ public abstract class MazeTile extends JPanel {
     //fields of all Tiles
     public tileAccess access;
     public tileType tile;
-    public MazeObject currentObj;
+    public Cheese cheese;  //turn this to cheese.
     boolean holdObject = false;
+
+    public Cat cat1;
+    public Cat cat2;
+    public Mouse mouse;
 
     //potentially a path could hold up to 4 objects I guess.
 
@@ -24,11 +28,36 @@ public abstract class MazeTile extends JPanel {
         return "MazeTile{" +
                 "access=" + access +
                 ", tile=" + tile +
-                ", currentObj=" + currentObj +
+                ", cheese=" + cheese +
                 ", holdObject=" + holdObject +
+                ", cat1=" + cat1 +
+                ", cat2=" + cat2 +
+                ", mouse=" + mouse +
                 ", xTilePos=" + xTilePos +
                 ", yTilePos=" + yTilePos +
                 '}';
+    }
+
+//    public void setObject(MazeObject object){
+//        String objType = object.getType().toString();
+//        if(objType.equalsIgnoreCase("MOUSETYPE")){
+//            this.setMouse(object);
+//        } else if(objType.equalsIgnoreCase("CATTYPE")){
+//
+//        } else if(objType.equalsIgnoreCase("CHEESETYPE")){
+//
+//        } else {
+//            System.out.println("set object failure.");
+//        }
+//    } //how do I set all of the different types?
+
+    public void checkObjects(){
+        if(this.cheese == null && this.cat1 == null && this.mouse == null && this.cat2 == null){
+            this.holdObject = true;
+        } else {
+            this.holdObject = false;
+        }
+
     }
 
     abstract void setTileType();
@@ -49,12 +78,12 @@ public abstract class MazeTile extends JPanel {
         this.tile = tile;
     }
 
-    public MazeObject getCurrentObj() {
-        return currentObj;
+    public Cheese getCheese() {
+        return cheese;
     }
 
-    public void setCurrentObj(MazeObject currentObj) {
-        this.currentObj = currentObj;
+    public void setCheese(Cheese cheese) {
+        this.cheese = cheese;
     }
 
     public boolean isHoldObject() {
@@ -79,5 +108,29 @@ public abstract class MazeTile extends JPanel {
 
     public void setyTilePos(int yTilePos) {
         this.yTilePos = yTilePos;
+    }
+
+    public Cat getCat1() {
+        return cat1;
+    }
+
+    public void setCat1(Cat cat1) {
+        this.cat1 = cat1;
+    }
+
+    public Cat getCat2() {
+        return cat2;
+    }
+
+    public void setCat2(Cat cat2) {
+        this.cat2 = cat2;
+    }
+
+    public Mouse getMouse() {
+        return mouse;
+    }
+
+    public void setMouse(Mouse mouse) {
+        this.mouse = mouse;
     }
 }

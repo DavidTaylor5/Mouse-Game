@@ -13,6 +13,7 @@ public class Mouse extends MazeObject {
         this.setxC(x);
         this.setyC(y);
         this.setObjectImage(mouseImage);
+        super.setType(objectType.MOUSETYPE);
     }
 
     public int getMouseLives() {

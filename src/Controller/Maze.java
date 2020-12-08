@@ -11,7 +11,15 @@ public class Maze extends JPanel {
     public MazeTile[][] tileArray;
 
     //should I keep my mouse object here
-    public Mouse player1 = new Mouse(2, 2);
+    public Mouse player1 = new Mouse(2, 2);  //why does cat one randomly show up and disappear?
+    public Cat cat1 = new Cat(6, 2, 1);
+    public Cat cat2 = new Cat(7, 20, 2);
+    public Cat cat3 = new Cat(7, 15, 3);
+    public Cat cat4 = new Cat(2, 23, 4);
+    public Cat cat5 = new Cat(8, 10, 5);
+
+    //tester cat 2  //doesn't work for some reason
+    //public Cat cat2 = new Cat(4, 22, 2);
 
     public Maze(String[] givenLetterMap){
         letterMap = givenLetterMap;
@@ -55,24 +63,138 @@ public class Maze extends JPanel {
         //tileArray[2][2]
     }
 
-    public void moveObject(MazeObject object, String direction, int numbMoves){
-        MazeTile oldTile = tileArray[object.getxC()][object.getyC()];
-        oldTile.setCurrentObj(null);
-        oldTile.setHoldObject(false);
+    public void moveMouse(Mouse givenMouse, String direction, int numbMoves){
+        MazeTile oldTile = tileArray[givenMouse.getxC()][givenMouse.getyC()];
+        oldTile.setMouse(null);
+        oldTile.checkObjects();
         MazeTile newTile = this.futureTile(oldTile, direction, numbMoves);
         // //checkInteraction() // mouse should only worry about interacting with cheese //Cat should worry about getting x y and interacting with mouse
         //I should auto generate cheese.
-        newTile.setCurrentObj(object);
-        newTile.setHoldObject(true);
-        newTile.setCurrentObj(object); //now I just need to update the player so that it also knows to modify coordinates.
+        newTile.checkObjects();
+        newTile.setMouse(givenMouse); //now I just need to update the player so that it also knows to modify coordinates.
         //repaint
         oldTile.repaint();
         newTile.repaint();
         //MazeTile newPos = tileArray
-        object.setxC(newTile.xTilePos);
-        object.setyC(newTile.yTilePos);
+        givenMouse.setxC(newTile.xTilePos);
+        givenMouse.setyC(newTile.yTilePos);
 
     }
+
+    public void moveCat(Cat cat){ //I don't think I want the maze to move the cats?
+        //
+        MazeTile oldTile = tileArray[cat.getxC()][cat.getyC()];
+        oldTile.setCat1(null);
+        oldTile.checkObjects();
+        //MazeTile newTile = this.futureTile(oldTile, direction, numbMoves);
+
+        MazeTile futureTile = null;  //make sure that future tile isn't null
+        if (cat.numbCat == 1){
+
+        } else if (cat.numbCat == 2){
+            futureTile = cat2MoveSet(cat, oldTile);
+        } else if (cat.numbCat == 3){ //cat 3 is done now for some of the more difficult cats, I don't look forward to cat 5
+            futureTile = cat3MoveSet(cat, oldTile);
+        } else if (cat.numbCat == 4){
+            futureTile = cat4MoveSet(cat, oldTile); //cat 4 is done I also need a mouse check method but that shouldn't be to diffy
+        } else if (cat.numbCat == 5){
+
+        } else {
+            System.out.println("Issue choosing cat icon.");
+        }
+
+
+        //System.out.println(cat.direction);
+        //put this into if statment, I need to keep future tile null if it is not changing, don't change unless I'm moving
+        if (futureTile != null) {
+            if(futureTile.getCat1() == null){
+                futureTile.setCat1(cat);
+            } else {
+                futureTile.setCat2(cat);
+            }
+            futureTile.checkObjects(); ///really I should just check for a mouse
+            futureTile.repaint();
+            cat.xC = futureTile.xTilePos;
+            cat.yC = futureTile.yTilePos;
+            oldTile.repaint();
+        }
+
+
+
+
+
+
+        // old code ^
+        //figure something out for all the different cat move sets
+    }
+
+
+    public MazeTile cat2MoveSet(Cat cat2, MazeTile oldTile){
+        String oppositeD = "";
+        MazeTile futureTile = null;
+        if(this.possibleCatMove(oldTile, cat2.direction, 1) && !cat2.direction.equalsIgnoreCase(oppositeD)){ //and the cat isn't going backwards ///can't go opposite
+            futureTile = this.futureTile(oldTile, cat2.direction, 1);
+            oppositeD = oppositeCatD(cat2.direction);
+            System.out.println(oppositeD);
+        } else {
+            //futureTile = oldTile;  //issue with this code 133
+            if(cat2.direction.equalsIgnoreCase("down")){
+                cat2.setDirection("right");
+            } else if(cat2.direction.equalsIgnoreCase("right")){
+                cat2.setDirection("up");
+            } else if(cat2.direction.equalsIgnoreCase("up")){
+                cat2.setDirection("left");
+            }
+            else {
+                cat2.setDirection("down");
+            }
+        }
+        return futureTile;
+    }
+
+    public String oppositeCatD(String direction){
+        if(direction.equalsIgnoreCase("up")){
+            return "down";
+        } else if(direction.equalsIgnoreCase("down")){
+            return "up";
+        } else if(direction.equalsIgnoreCase("left")){
+            return "right";
+        } else if(direction.equalsIgnoreCase("right")){
+            return "left";
+        } else {
+            System.out.println("Problem with opposite direction method.");
+            return "null";
+        }
+    }
+
+    public MazeTile cat3MoveSet(Cat cat3, MazeTile oldTile){
+        MazeTile futureTile;
+        if(this.possibleCatMove(oldTile, cat3.direction, 1)){
+            futureTile = this.futureTile(oldTile, cat3.direction, 1);
+        } else {
+            futureTile = oldTile;
+            if(cat3.direction.equalsIgnoreCase("up")){
+                cat3.setDirection("down");
+            } else {cat3.setDirection("up");}
+        } //also change direction
+
+        return futureTile;
+    }
+
+    public MazeTile cat4MoveSet(Cat cat4, MazeTile oldTile){
+        MazeTile futureTile;
+        if(this.possibleCatMove(oldTile, cat4.direction, 1)){
+            futureTile = this.futureTile(oldTile, cat4.direction, 1);
+        } else {
+            futureTile = oldTile;
+            if(cat4.direction.equalsIgnoreCase("left")){
+                cat4.setDirection("right");
+            } else {cat4.setDirection("left");}
+        } //also change direction
+
+        return futureTile;
+    }
+
 
     public MazeTile futureTile(MazeTile currentTile, String direction, int numbMoves){
         MazeTile lookTile;
@@ -109,6 +231,20 @@ public class Maze extends JPanel {
             return true;
         } else {
             System.out.println("Problem with determining right movement tile");
+            return false;
+        }
+    }
+
+    public boolean possibleCatMove(MazeTile currentTile, String direction, int numbMoves){
+        //right tile
+        MazeTile lookTile = this.futureTile(currentTile, direction, numbMoves);
+
+        if (lookTile.getAccess() == MazeTile.tileAccess.NOMOVE){
+            return false;
+        } else if(lookTile.getAccess() == MazeTile.tileAccess.ALLMOVE){
+            return true;
+        } else {
+            System.out.println("Problem with cat determining right movement tile");
             return false;
         }
     }

@@ -17,8 +17,8 @@ public class TunnelTile extends MazeTile {
         super.paintComponent(g);
         this.setPreferredSize(new Dimension(25, 25));
 
-        if(holdObject){
-            ImageIcon givenImage = this.getCurrentObj().getObjectImage();
+        if(this.mouse != null){
+            ImageIcon givenImage = this.getMouse().getObjectImage();
             g.drawImage(givenImage.getImage(), 0, 0, null );
         } else {
             this.setBackground(Color.pink);
