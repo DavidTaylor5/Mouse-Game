@@ -15,16 +15,18 @@ public class Maze extends JPanel {
     public MazeTile[][] tileArray;
 
     //should I keep my mouse object here
-    //public Mouse player1 = new Mouse(2, 2);  //why does cat one randomly show up and disappear?
+    public Mouse player1 = new Mouse(2, 2);  //why does cat one randomly show up and disappear?
     public Cat cat1 = new Cat(6, 2, 1);
     public Cat cat2 = new Cat(7, 20, 2);
     public Cat cat3 = new Cat(7, 15, 3);
     public Cat cat4 = new Cat(2, 23, 4);
-    //public Cat cat5 = new Cat(8, 10, 5);
+    public Cat cat5 = new Cat(8, 10, 5);
 
     //tester cat5 and player 1
-    public Mouse player1 = new Mouse(1, 6);
-    public Cat cat5 = new Cat(2, 6, 5);
+//    public Mouse player1 = new Mouse(1, 6);
+//    public Cat cat5 = new Cat(2, 2, 5);
+
+    public MazeTile catOldTile; //specifically for cat 5
 
     //tester cat 2  //doesn't work for some reason
     //public Cat cat2 = new Cat(4, 22, 2);
@@ -93,6 +95,7 @@ public class Maze extends JPanel {
         //
         MazeTile oldTile = tileArray[cat.getxC()][cat.getyC()];
         oldTile.setCat1(null);
+        oldTile.setCat2(null);
         oldTile.checkObjects();
         //MazeTile newTile = this.futureTile(oldTile, direction, numbMoves);
 
@@ -107,6 +110,7 @@ public class Maze extends JPanel {
             futureTile = cat4MoveSet(cat, oldTile); //cat 4 is done I also need a mouse check method but that shouldn't be to diffy
         } else if (cat.numbCat == 5){
             futureTile = cat5MoveSet(cat, oldTile, mouse);
+            this.catOldTile = futureTile;
         } else {
             System.out.println("Issue choosing cat icon.");
         }
@@ -250,46 +254,58 @@ public class Maze extends JPanel {
 
     public MazeTile cat5MoveSet(Cat cat5, MazeTile oldTile, Mouse mouse){
         MazeTile futureTile = null;
+
+        //I need to store old tile somehow so that I don't return
         LinkedList<String> necessaryDirections = determineDirections(cat5, oldTile, mouse);
         int[] optimalMoves = optimalMoves(cat5, mouse); //should give optimal moves x/down/up and y/left/right
-
 
         //I have to make sure a non optimal move is possible
         boolean alreadyMoved = false;
         if(necessaryDirections.size() > 1){
-            if(possibleCatMove(oldTile, necessaryDirections.get(1), 1)){
-                for (int i = 1; i <= 3 ; i++) {
-                    if((i + cat5.getxC() < 10) && (cat5.getxC() - i > 0)){
-                        if(possibleCatMove(oldTile, necessaryDirections.get(1), i)){
+            //if(possibleCatMove(oldTile, necessaryDirections.get(1), 1)){
+                for (int i = 1; i <= optimalMoves[1] ; i++) {
+                    if((i + cat5.getxC() < 10) && (cat5.getxC() - i >= 0)){
+                        if(possibleCatMove(oldTile, necessaryDirections.get(1), i) && futureTile(oldTile, necessaryDirections.get(1), i) != catOldTile){
                             futureTile = futureTile(oldTile, necessaryDirections.get(1), i);
                             alreadyMoved = true;
                         }
                     }
                 }
-            }
+            //}
         }
 
-        if(necessaryDirections.size() >0){
-            if(possibleCatMove(oldTile, necessaryDirections.get(0), 1) && !alreadyMoved){
-                for (int i = 1; i <= 3 ; i++) {
-                    if(necessaryDirections.get(1).equalsIgnoreCase("left") || necessaryDirections.get(1).equalsIgnoreCase("Right")){
+        if(necessaryDirections.size() >0 && !alreadyMoved){
+            //if(possibleCatMove(oldTile, necessaryDirections.get(0), 1) && !alreadyMoved){
 
-                    }//
-                    if((i + cat5.getyC() < 25) && (cat5.getyC() - i > 0)){
-                        if(possibleCatMove(oldTile, necessaryDirections.get(0), i)){  //test index bounds
-                            futureTile = futureTile(oldTile, necessaryDirections.get(0), i);
-                            alreadyMoved = true;
+                    if(necessaryDirections.get(0).equalsIgnoreCase("left") || necessaryDirections.get(0).equalsIgnoreCase("Right")){
+                        for (int i = 1; i <= optimalMoves[0]; i++) {
+                            if((i + cat5.getyC() < 25)){  //( && cat5.getyC() - i > 0) dont' think i need this
+                                if(possibleCatMove(oldTile, necessaryDirections.get(0), i)){  //test index bounds
+                                    futureTile = futureTile(oldTile, necessaryDirections.get(0), i);
+                                    alreadyMoved = true;
+                                }
+                            }
                         }
+
+                    } else if(necessaryDirections.get(0).equalsIgnoreCase("down") || necessaryDirections.get(0).equalsIgnoreCase("up")){
+                        for (int i = 1; i <= optimalMoves[1]; i++) {
+                            if((i + cat5.getyC() < 10)){// && (cat5.getxC() - i > 0)
+                                if(possibleCatMove(oldTile, necessaryDirections.get(0), i)){  //test index bounds
+                                    futureTile = futureTile(oldTile, necessaryDirections.get(0), i);
+                                    alreadyMoved = true;
+                                }
+                            }
+                        }
+
                     }
-                }
-            }
+            //}
         }
 
 
         if(!alreadyMoved){
             futureTile = cat1MoveSet(cat5, oldTile);
         }
-
+        this.catOldTile = futureTile;
         return futureTile;
         //if(this.possibleCatMove(oldTile, direction, 3))
     }
@@ -298,6 +314,13 @@ public class Maze extends JPanel {
         int[] movesXY = new int[2];
         int absX = Math.abs(cat.getxC() - mouse.getxC());
         int absY = Math.abs(cat.getyC() - mouse.getyC());
+        if(absX > 3){
+            absX = 3;
+        }
+        if(absY > 3){
+            absY = 3;
+        }
+
         movesXY[0] = absY; //corresponds to left or right
         movesXY[1] = absX;
         return movesXY;
@@ -319,7 +342,7 @@ public class Maze extends JPanel {
 
         if(catX < mouseX){
             necessaryDirection.add("DOWN");
-        } else if(catY > mouseX){
+        } else if(catX > mouseX){
             necessaryDirection.add("UP");
         }
 

@@ -14,6 +14,7 @@ public class Cat extends MazeObject{
     public int numbCat;
     public String direction;
     public String oppositeD;
+
     //public string current Direction // need to implement
 
     public Cat(int x, int y, int typeCat){

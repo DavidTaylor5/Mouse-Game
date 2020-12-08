@@ -187,6 +187,9 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
         tile6.setCat1(myMaze.cat5);
         tile6.checkObjects();
         tile6.repaint();
+        //extra for cat 5
+         this.myMaze.catOldTile = this.myMaze.tileArray[myMaze.cat5.getxC()][myMaze.cat5.getyC()];
+        //
         //cat5 start ^
 //        MazeTile tile7 = myMaze.tileArray[2][2];
 //        tile1.setMouse(myMaze.player1);
