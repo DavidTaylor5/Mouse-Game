@@ -15,10 +15,11 @@ public class ImageTutorial extends JFrame {
 
         //image1 = new ImageIcon(getClass().getResource("pikachu-crop.png")); //apprenently pictures need to be in same package.
         //ImageIcon image2 = new ImageIcon("src/Model/cartoon-unknown-cat.png");
-        Cat cat1 = new Cat(4, 4, 1);
+        Cheese cheeesee = new Cheese(4, 4);
+        Cat chatCat = new Cat(4, 4, 4);
         //label1 = new JLabel(image1);
         //label1 = new JLabel(cat1.getObjectImage());
-        label1 = new JLabel(cat1.getObjectImage());
+        label1 = new JLabel(cheeesee.getObjectImage());
         add(label1);
     }
 

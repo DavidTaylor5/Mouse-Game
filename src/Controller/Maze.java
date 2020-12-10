@@ -22,6 +22,11 @@ public class Maze extends JPanel {
     public Cat cat4 = new Cat(2, 23, 4);
     public Cat cat5 = new Cat(8, 10, 5);
 
+    public Cheese cheese1 = new Cheese(4, 17 );
+    public Cheese cheese2 = new Cheese(7, 20);
+    public Cheese cheese3 = new Cheese(8, 2);
+    public Cheese cheese4 = new Cheese(6, 12);
+
     //tester cat5 and player 1
 //    public Mouse player1 = new Mouse(1, 6);
 //    public Cat cat5 = new Cat(2, 2, 5);
@@ -134,12 +139,22 @@ public class Maze extends JPanel {
         }
 
 
-
-
-
-
         // old code ^
         //figure something out for all the different cat move sets
+    }
+
+    public boolean allCatsCheck(Cat cat1, Cat cat2, Cat cat3, Cat cat4, Cat cat5){
+        MazeTile cTile1 = tileArray[cat1.getxC()][cat1.getyC()];
+        MazeTile cTile2 = tileArray[cat2.getxC()][cat2.getyC()];
+        MazeTile cTile3 = tileArray[cat3.getxC()][cat3.getyC()];
+        MazeTile cTile4 = tileArray[cat4.getxC()][cat4.getyC()];
+        MazeTile cTile5 = tileArray[cat5.getxC()][cat5.getyC()];
+
+        return (cTile1.catMouseInteraction() || cTile2.catMouseInteraction() || cTile3.catMouseInteraction() ||
+        cTile4.catMouseInteraction() || cTile5.catMouseInteraction());
+
+
+
     }
 
     public MazeTile cat1MoveSet(Cat cat1, MazeTile oldTile){ //appears to be working.

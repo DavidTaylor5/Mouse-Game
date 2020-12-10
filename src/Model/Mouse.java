@@ -16,6 +16,11 @@ public class Mouse extends MazeObject {
         super.setType(objectType.MOUSETYPE);
     }
 
+    public void respawn(){
+        this.setxC(2);
+        this.setyC(2); //how do I update the tile though?
+    }
+
     public int getMouseLives() {
         return mouseLives;
     }

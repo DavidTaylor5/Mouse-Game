@@ -1,10 +1,7 @@
 package View;
 
 import Controller.Maze;
-import Model.Cat;
-import Model.MazeObject;
-import Model.MazeTile;
-import Model.Mouse;
+import Model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,10 +31,13 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
     JButton reset = new JButton("Reset");
 
     JLabel timePassed = new JLabel("0");
-    JLabel mouseIcon = new JLabel();
-    JLabel cheeseIcon = new JLabel();
-    JLabel amountLives = new JLabel();
-    JLabel amountCheese = new JLabel();
+    JLabel mouseIcon = new JLabel(new Mouse(0, 0).getObjectImage());
+    JLabel cheeseIcon = new JLabel(new Cheese(0, 0).getObjectImage());
+    JLabel amountLives = new JLabel("LIVES 3");
+    JLabel amountCheese = new JLabel("CHEESE SCORE 0");
+
+    public int scoreBoard = 0;
+    public int mouseLives = 3;
 
     //public int secondsPassed;
 
@@ -191,15 +191,25 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
          this.myMaze.catOldTile = this.myMaze.tileArray[myMaze.cat5.getxC()][myMaze.cat5.getyC()];
         //
         //cat5 start ^
-//        MazeTile tile7 = myMaze.tileArray[2][2];
-//        tile1.setMouse(myMaze.player1);
-//        tile1.checkObjects();
-//        tile1.repaint();
+        MazeTile tile7 = myMaze.tileArray[myMaze.cheese1.xC][myMaze.cheese1.yC];
+        tile7.setCheese(myMaze.cheese1);
+        tile7.checkObjects();
+        tile7.repaint();
 //        //cheese start ^
-//        MazeTile tile8 = myMaze.tileArray[2][2];
-//        tile1.setMouse(myMaze.player1);
-//        tile1.checkObjects();
-//        tile1.repaint();
+        MazeTile tile8 = myMaze.tileArray[myMaze.cheese2.xC][myMaze.cheese2.yC];
+        tile8.setCheese(myMaze.cheese2);
+        tile8.checkObjects();
+        tile8.repaint();
+//        //cheese start ^
+        MazeTile tile9 = myMaze.tileArray[myMaze.cheese3.xC][myMaze.cheese3.yC];
+        tile9.setCheese(myMaze.cheese3);
+        tile9.checkObjects();
+        tile9.repaint();
+//        //cheese start ^
+        MazeTile tile10 = myMaze.tileArray[myMaze.cheese4.xC][myMaze.cheese4.yC];
+        tile10.setCheese(myMaze.cheese4);
+        tile10.checkObjects();
+        tile10.repaint();
 //        //cheese start ^
 
 
@@ -222,6 +232,20 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
                 MazeGui.this.myMaze.moveCat(myMaze.cat3, myMaze.player1);
                 MazeGui.this.myMaze.moveCat(myMaze.cat4, myMaze.player1);
                 MazeGui.this.myMaze.moveCat(myMaze.cat5, myMaze.player1);
+
+                Boolean conflict = MazeGui.this.myMaze.allCatsCheck(myMaze.cat1, myMaze.cat2, myMaze.cat3, myMaze.cat4, myMaze.cat5);  //this code might not be optimal
+                if(conflict){
+                    MazeGui.this.myMaze.player1.respawn();
+                    MazeTile respawnTile = MazeGui.this.myMaze.tileArray[myMaze.player1.getxC()][myMaze.player1.getyC()];
+                    respawnTile.setMouse(myMaze.player1);
+                    respawnTile.repaint(); //maybe I should Also make it the responsiblity of the mouse
+                    MazeGui.this.mouseLives -= 1;
+                    MazeGui.this.amountLives.setText("LIVES " + MazeGui.this.mouseLives);
+
+                    //mouse.respawn
+                    //lives go down
+                    //make sure lives aren't zero or end game.
+                }
                 //MazeGui.this.secondsPassed = secondsPassed;
             }
         };
@@ -280,6 +304,12 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
                     //update where the mouse is, the x and y of the mouse, repaint the old tile, repaint the new tile
                 }
 
+            }
+            //check for cheese tile
+            boolean scoreUp = MazeGui.this.myMaze.tileArray[MazeGui.this.myMaze.player1.getxC()][MazeGui.this.myMaze.player1.getyC()].cheeseInteraction();
+            if(scoreUp){
+                scoreBoard += 100;
+                MazeGui.this.amountCheese.setText("CHEESE SCORE " + scoreBoard);
             }
         }
     }

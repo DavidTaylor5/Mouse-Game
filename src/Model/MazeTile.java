@@ -60,6 +60,22 @@ public abstract class MazeTile extends JPanel {
 
     }
 
+    public boolean cheeseInteraction(){
+        if(this.cheese != null && this.mouse !=null){
+            this.setCheese(null);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean catMouseInteraction(){
+        if((this.cat1 != null || this.cat2 != null) && this.mouse !=null){
+            this.setMouse(null); ///////////wroking on this
+            return true;
+        }
+        return false;
+    }
+
     abstract void setTileType();
 
     public tileAccess getAccess() {
