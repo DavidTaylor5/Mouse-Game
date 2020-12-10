@@ -36,8 +36,12 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
     JLabel amountLives = new JLabel("LIVES 3");
     JLabel amountCheese = new JLabel("CHEESE SCORE 0");
 
+    public int secondsPassed = 0;
     public int scoreBoard = 0;
     public int mouseLives = 3;
+
+    public TimerClass gameTime = new TimerClass();
+    public InteractionTimer catAndMouse = new InteractionTimer();
 
     //public int secondsPassed;
 
@@ -127,6 +131,12 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
         northPanel.add(amountLives);
         northPanel.add(amountCheese);
 
+        //menu actionhandlers
+        MenuHandler menuHandler = new MenuHandler();
+        this.start.addActionListener(menuHandler);
+        this.stop.addActionListener(menuHandler);
+        this.reset.addActionListener(menuHandler);
+
         //action panel
         this.add(southPanel, BorderLayout.SOUTH);
         southPanel.setLayout(new FlowLayout());
@@ -142,8 +152,11 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
         left.addActionListener(moveHandler);
         right.addActionListener(moveHandler);
 
-        TimerClass gameTime = new TimerClass();
+        //TimerClass gameTime = new TimerClass();
         gameTime.startGame();
+
+        //InteractionTimer catAndMouse = new InteractionTimer();
+        catAndMouse.checkInteraction();
 
     }
 
@@ -216,10 +229,6 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
     }
     public class TimerClass {
 
-
-        public int secondsPassed = 0;
-
-
         Timer myTimer = new Timer();
         TimerTask task = new TimerTask() {
             public void run() {
@@ -233,22 +242,32 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
                 MazeGui.this.myMaze.moveCat(myMaze.cat4, myMaze.player1);
                 MazeGui.this.myMaze.moveCat(myMaze.cat5, myMaze.player1);
 
-                Boolean conflict = MazeGui.this.myMaze.allCatsCheck(myMaze.cat1, myMaze.cat2, myMaze.cat3, myMaze.cat4, myMaze.cat5);  //this code might not be optimal
-                if(conflict){
-                    MazeGui.this.myMaze.player1.respawn();
-                    MazeTile respawnTile = MazeGui.this.myMaze.tileArray[myMaze.player1.getxC()][myMaze.player1.getyC()];
-                    respawnTile.setMouse(myMaze.player1);
-                    respawnTile.repaint(); //maybe I should Also make it the responsiblity of the mouse
-                    MazeGui.this.mouseLives -= 1;
-                    MazeGui.this.amountLives.setText("LIVES " + MazeGui.this.mouseLives);
-
-                    //mouse.respawn
-                    //lives go down
-                    //make sure lives aren't zero or end game.
-                }
+//                boolean conflict = MazeGui.this.myMaze.allCatsCheck(myMaze.cat1, myMaze.cat2, myMaze.cat3, myMaze.cat4, myMaze.cat5);  //this code might not be optimal
+//                if(conflict){
+//                    MazeGui.this.myMaze.player1.respawn();
+//                    MazeTile respawnTile = MazeGui.this.myMaze.tileArray[myMaze.player1.getxC()][myMaze.player1.getyC()];
+//                    respawnTile.setMouse(myMaze.player1);
+//                    respawnTile.repaint(); //maybe I should Also make it the responsiblity of the mouse  //maybe I should make it the resposibility of the mouse, Maybe I just need a fast timer
+//                    MazeGui.this.mouseLives -= 1;
+//                    MazeGui.this.amountLives.setText("LIVES " + MazeGui.this.mouseLives);
+//
+//                    //mouse.respawn
+//                    //lives go down
+//                    //make sure lives aren't zero or end game.
+//                }
                 //MazeGui.this.secondsPassed = secondsPassed;
             }
         };
+
+
+        public void pause(){
+            myTimer.cancel();
+        }
+
+        public void resume() {
+            myTimer = new Timer();
+            myTimer.schedule(task, 0, 1000 );
+        }
 
         public void startGame(){
             myTimer.scheduleAtFixedRate(task, 1000, 1000);
@@ -256,6 +275,77 @@ public class MazeGui extends JFrame { //cat move should check for a mouse and mo
 
     }
 
+    public class InteractionTimer {  //the second time is not a gimmick. I wonder how many threads it would take to actually crash or slow down this pc.
+
+
+        Timer myTimer = new Timer();
+        TimerTask task = new TimerTask() {
+            public void run() {
+                //System.out.println(secondsPassed); prints to the console each second passed
+                //make the cats move
+
+                boolean conflict = MazeGui.this.myMaze.allCatsCheck(myMaze.cat1, myMaze.cat2, myMaze.cat3, myMaze.cat4, myMaze.cat5);  //this code might not be optimal
+                if(conflict){
+                    MazeGui.this.myMaze.player1.respawn();
+                    MazeTile respawnTile = MazeGui.this.myMaze.tileArray[myMaze.player1.getxC()][myMaze.player1.getyC()];
+                    respawnTile.setMouse(myMaze.player1);
+                    respawnTile.repaint(); //maybe I should Also make it the responsiblity of the mouse  //maybe I should make it the resposibility of the mouse, Maybe I just need a fast timer
+                    MazeGui.this.mouseLives -= 1;
+                    MazeGui.this.amountLives.setText("LIVES " + MazeGui.this.mouseLives);
+
+                    //mouse.respawn
+                    //lives go down
+                    //make sure lives aren't zero or end game.
+                }
+                //MazeGui.this.secondsPassed = secondsPassed;  //pausing the game would mean stopping the timers and inactivating the buttons. //play would mean the opposite.
+            }
+
+
+        };
+
+        public void pause(){
+            myTimer.cancel();
+        }
+
+        public void resume() {
+            myTimer = new Timer();
+            myTimer.schedule( task, 0, 1000 );
+        }
+
+        public void checkInteraction(){
+            myTimer.scheduleAtFixedRate(task, 1000, 100);
+        }
+
+    }
+
+
+    private class MenuHandler implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if(event.getSource() == MazeGui.this.start){
+//                MazeGui.this.gameTime.resume();
+//                MazeGui.this.catAndMouse.resume();
+                MazeGui.this.gameTime = new TimerClass();
+                gameTime.startGame();
+            } else if(event.getSource() == MazeGui.this.stop){
+                MazeGui.this.gameTime.pause();
+                //MazeGui.this.catAndMouse.pause();
+            } else if(event.getSource() == MazeGui.this.reset){
+                MazeGui.this.gameTime.pause();
+
+                Maze nextMaze = new Maze(myMaze.letterMap);
+                MazeGui.this.myMaze = nextMaze;
+                MazeGui.this.startingObjectLocations(nextMaze);
+                MazeGui.this.add(nextMaze, BorderLayout.CENTER);
+                MazeGui.this.repaint();
+
+                MazeGui.this.gameTime = new TimerClass();
+                gameTime.startGame();
+            }
+
+        }
+    }
 
 
 
